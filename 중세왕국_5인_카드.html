@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>중세왕국 5인의 기둥</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#c9a84c;--gold-light:#e8d48b;--gold-dark:#8b6914;
+  --parchment:#f4e8c1;--parchment-dark:#d4c49a;
+  --ink:#1a1208;--ink-light:#3d2e14;
+  --crimson:#8b1a1a;--crimson-light:#a83232;
+  --navy:#1a2744;--forest:#1a3320;
+}
+html{scroll-behavior:smooth}
+body{
+  background:#0a0804;
+  color:var(--parchment);
+  font-family:'Noto Serif KR',serif;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ── Ambient Background ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,.06),transparent),
+    radial-gradient(ellipse 60% 40% at 20% 80%,rgba(139,26,26,.04),transparent),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(26,39,68,.06),transparent);
+  pointer-events:none;
+}
+
+/* ── Hero Section ── */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:4rem 2rem;z-index:1;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30' stroke='%23c9a84c' stroke-width='.3' opacity='.07'/%3E%3C/svg%3E");
+  opacity:.5;pointer-events:none;
+}
+.hero-emblem{
+  width:120px;height:120px;margin-bottom:2rem;
+  position:relative;animation:fadeDown 1.2s ease-out;
+}
+.hero-emblem svg{width:100%;height:100%}
+.hero-subtitle{
+  font-family:'Cinzel',serif;font-size:clamp(.8rem,1.5vw,.95rem);
+  letter-spacing:.4em;text-transform:uppercase;
+  color:var(--gold);opacity:.7;margin-bottom:1rem;
+  animation:fadeDown 1.2s ease-out .2s both;
+}
+.hero-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.2rem,5vw,4.5rem);
+  color:var(--gold-light);
+  text-shadow:0 0 60px rgba(201,168,76,.15),0 4px 20px rgba(0,0,0,.5);
+  line-height:1.2;margin-bottom:1.5rem;
+  animation:fadeDown 1.2s ease-out .4s both;
+}
+.hero-desc{
+  font-size:clamp(.9rem,1.5vw,1.1rem);
+  color:var(--parchment-dark);max-width:600px;
+  line-height:1.9;font-weight:300;
+  animation:fadeDown 1.2s ease-out .6s both;
+}
+.scroll-hint{
+  position:absolute;bottom:3rem;
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  animation:fadeDown 1.2s ease-out 1s both;
+}
+.scroll-hint span{font-size:.7rem;letter-spacing:.3em;color:var(--gold);opacity:.5}
+.scroll-arrow{
+  width:20px;height:20px;border-right:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);
+  transform:rotate(45deg);opacity:.4;
+  animation:scrollBounce 2s ease-in-out infinite;
+}
+
+/* ── Divider ── */
+.divider{
+  display:flex;align-items:center;justify-content:center;gap:1.5rem;
+  padding:3rem 2rem;
+}
+.divider-line{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark),transparent)}
+.divider-diamond{
+  width:8px;height:8px;background:var(--gold-dark);transform:rotate(45deg);
+}
+
+/* ── Cards Container ── */
+.cards-section{
+  position:relative;z-index:1;
+  max-width:1400px;margin:0 auto;
+  padding:2rem 2rem 6rem;
+}
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+  gap:2.5rem;
+}
+
+/* ── Character Card ── */
+.card{
+  position:relative;
+  background:linear-gradient(160deg,rgba(20,16,8,.95),rgba(30,24,12,.9));
+  border:1px solid rgba(201,168,76,.15);
+  border-radius:4px;
+  overflow:hidden;
+  transition:transform .5s cubic-bezier(.23,1,.32,1),box-shadow .5s ease;
+  cursor:default;
+  opacity:0;transform:translateY(40px);
+  animation:cardReveal .8s ease-out forwards;
+}
+.card:nth-child(1){animation-delay:.1s}
+.card:nth-child(2){animation-delay:.25s}
+.card:nth-child(3){animation-delay:.4s}
+.card:nth-child(4){animation-delay:.55s}
+.card:nth-child(5){animation-delay:.7s}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 40px rgba(201,168,76,.06);
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:.6;
+}
+
+/* Card Header */
+.card-header{
+  position:relative;padding:2.5rem 2rem 1.5rem;text-align:center;
+  background:linear-gradient(180deg,rgba(201,168,76,.04),transparent);
+}
+.card-icon{
+  width:64px;height:64px;margin:0 auto 1.2rem;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid rgba(201,168,76,.25);border-radius:50%;
+  background:rgba(201,168,76,.03);
+  position:relative;
+}
+.card-icon::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:1px solid rgba(201,168,76,.08);
+}
+.card-icon svg{width:28px;height:28px;fill:var(--gold);opacity:.85}
+.card-name{
+  font-family:'Cinzel',serif;font-size:1.5rem;
+  color:var(--gold-light);letter-spacing:.05em;margin-bottom:.3rem;
+}
+.card-title-kr{
+  font-size:1rem;font-weight:600;color:var(--parchment);
+  margin-bottom:.2rem;
+}
+.card-title-en{
+  font-family:'Cinzel',serif;font-size:.72rem;
+  color:var(--gold);opacity:.55;letter-spacing:.15em;text-transform:uppercase;
+}
+
+/* Card Body */
+.card-body{padding:0 2rem 2rem}
+
+.card-meta{
+  display:flex;gap:1rem;margin-bottom:1.5rem;
+  padding-bottom:1.2rem;border-bottom:1px solid rgba(201,168,76,.08);
+}
+.meta-item{flex:1;text-align:center}
+.meta-label{
+  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold);opacity:.5;margin-bottom:.3rem;
+}
+.meta-value{font-size:.78rem;color:var(--parchment-dark);line-height:1.5;font-weight:400}
+
+.card-quote{
+  position:relative;padding:1.2rem 1.5rem;margin-bottom:1.2rem;
+  background:rgba(201,168,76,.03);
+  border-left:2px solid rgba(201,168,76,.25);
+  border-radius:0 3px 3px 0;
+}
+.card-quote p{
+  font-size:.85rem;line-height:1.8;color:var(--parchment);
+  font-weight:400;font-style:italic;
+}
+
+.card-summary{
+  font-size:.82rem;line-height:1.9;color:var(--parchment-dark);
+  font-weight:300;margin-bottom:1.2rem;
+}
+
+.card-scene{
+  display:flex;align-items:flex-start;gap:.6rem;
+  padding:1rem;
+  background:rgba(0,0,0,.15);border-radius:3px;
+  border:1px solid rgba(201,168,76,.06);
+}
+.scene-icon{
+  flex-shrink:0;width:18px;height:18px;margin-top:2px;
+  fill:var(--gold);opacity:.4;
+}
+.scene-text{
+  font-size:.78rem;line-height:1.7;color:var(--gold);
+  font-weight:500;
+}
+
+/* ── Card Expand ── */
+.card-expand-toggle{
+  display:flex;align-items:center;justify-content:center;
+  padding:.8rem;cursor:pointer;
+  border-top:1px solid rgba(201,168,76,.06);
+  color:var(--gold);font-size:.72rem;letter-spacing:.15em;
+  opacity:.5;transition:opacity .3s;
+  user-select:none;gap:.4rem;
+}
+.card-expand-toggle:hover{opacity:.9}
+.card-expand-toggle svg{
+  width:12px;height:12px;fill:var(--gold);
+  transition:transform .3s;
+}
+.card.expanded .card-expand-toggle svg{transform:rotate(180deg)}
+.card-story{
+  max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.23,1,.32,1);
+}
+.card.expanded .card-story{max-height:800px}
+.card-story-inner{
+  padding:0 2rem 2rem;
+  font-size:.8rem;line-height:2;color:var(--parchment-dark);
+  font-weight:300;white-space:pre-line;
+}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;padding:4rem 2rem;
+  border-top:1px solid rgba(201,168,76,.06);
+}
+.footer p{
+  font-family:'Cinzel',serif;font-size:.75rem;
+  color:var(--gold);opacity:.3;letter-spacing:.3em;
+}
+
+/* ── Animations ── */
+@keyframes fadeDown{
+  from{opacity:0;transform:translateY(-20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes cardReveal{
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes scrollBounce{
+  0%,100%{transform:rotate(45deg) translateY(0)}
+  50%{transform:rotate(45deg) translateY(6px)}
+}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .cards-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+  .hero{min-height:80vh;padding:3rem 1.5rem}
+  .card-body{padding:0 1.5rem 1.5rem}
+  .card-story-inner{padding:0 1.5rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="hero-emblem">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="55" fill="none" stroke="#c9a84c" stroke-width=".6" opacity=".3"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#c9a84c" stroke-width=".4" opacity=".2"/>
+      <path d="M60 15L67 40H58L60 15Z" fill="#c9a84c" opacity=".6"/>
+      <path d="M60 105L53 80H62L60 105Z" fill="#c9a84c" opacity=".6"/>
+      <path d="M15 60L40 53V62L15 60Z" fill="#c9a84c" opacity=".6"/>
+      <path d="M105 60L80 67V58L105 60Z" fill="#c9a84c" opacity=".6"/>
+      <circle cx="60" cy="60" r="18" fill="none" stroke="#c9a84c" stroke-width="1" opacity=".5"/>
+      <text x="60" y="65" text-anchor="middle" font-family="Cinzel Decorative" font-size="14" fill="#c9a84c" opacity=".7">V</text>
+    </svg>
+  </div>
+  <p class="hero-subtitle">The Five Pillars of the Kingdom</p>
+  <h1 class="hero-title">중세왕국<br>다섯 기둥</h1>
+  <p class="hero-desc">
+    왕국을 지탱하는 것은 성벽이 아니라 사람이다.<br>
+    다섯 사람, 각자의 자리에서 왕국을 지키는 이야기.
+  </p>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-diamond"></div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ══════ CARDS ══════ -->
+<section class="cards-section">
+  <div class="cards-grid">
+
+
+    <!-- ── 박상록 · 수도원장 ── -->
+    <article class="card" id="card1">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm-4-4h8v-1c0-2.33-1.33-4.29-3.5-4.84V11c0-.28-.22-.5-.5-.5s-.5.22-.5.5v1.16C9.33 12.71 8 14.67 8 17v1zM12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l4.93-1.38C8.42 21.5 10.15 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" opacity=".7"/><path d="M17.5 8c.28 0 .5-.22.5-.5V6c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v1.5c0 .28.22.5.5.5s.5-.22.5-.5V6h10v1.5c0 .28.22.5.5.5z" opacity=".5"/></svg>
+        </div>
+        <h2 class="card-name">박상록</h2>
+        <p class="card-title-kr">수도원장</p>
+        <p class="card-title-en">Abbot</p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <div class="meta-label">롤모델</div>
+            <div class="meta-value">클레르보의 베르나르</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">핵심강점</div>
+            <div class="meta-value">배움 · 연결성 · 공감</div>
+          </div>
+        </div>
+        <div class="card-quote">
+          <p>"저 산이 거기 있는 건 왜일까요?"</p>
+        </div>
+        <p class="card-summary">세상의 모든 연결을 이해하면, 눈앞에 있는 사람이 왜 고통받는지도 보인다.</p>
+        <div class="card-scene">
+          <svg class="scene-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <p class="scene-text">사람을 더 잘 이해하기 위한 배움 — 그것이 유일한 방향이다.</p>
+        </div>
+      </div>
+      <div class="card-expand-toggle" onclick="toggleCard('card1')">
+        <span>시나리오 전문</span>
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="card-story">
+        <div class="card-story-inner">산 중턱, 돌담으로 둘러싸인 수도원. 이른 아침 종소리가 울리기 전, 박상록은 이미 약초밭에 나와 있다.
+
+그에게 약초 하나는 단순한 식물이 아니라 세상과 연결된 이야기다.
+
+오늘 수도원 문을 두드린 사람은 세 명이다.
+
+먼저 찾아온 것은 전쟁에서 다리를 잃은 노병이다. 박상록은 그의 상처를 보기 전에 눈을 먼저 본다. 몸의 상처보다 깊은 것이 있다는 걸 안다. 치료를 하면서 말을 걸지 않는다. 그저 옆에 있는다. 노병이 먼저 입을 열 때까지.
+
+두 번째는 글을 배우러 온 농부의 아이다. 이 아이는 들으면 잊어버리고, 직접 써봐야 기억하는 아이다. 그래서 말 대신 펜을 쥐여준다.
+
+세 번째는 신앙을 잃어버렸다는 젊은 수도사다. 박상록은 그에게 교리를 설명하지 않는다. 대신 수도원 창밖으로 보이는 산을 가리키며 말한다.
+
+"저 산이 거기 있는 건 왜일까요?"</div>
+      </div>
+    </article>
+
+    <!-- ── 박상민 · 왕국 재상 ── -->
+    <article class="card" id="card2">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+        </div>
+        <h2 class="card-name">박상민</h2>
+        <p class="card-title-kr">왕국 재상</p>
+        <p class="card-title-en">Grand Chancellor</p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <div class="meta-label">롤모델</div>
+            <div class="meta-value">토마스 모어</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">핵심강점</div>
+            <div class="meta-value">전략 · 공감 · 개별화 · 심사숙고</div>
+          </div>
+        </div>
+        <div class="card-quote">
+          <p>"차 한 잔 하시겠습니까?"</p>
+        </div>
+        <p class="card-summary">조용히 움직이는 사람이 가장 멀리 간다는 걸 그는 안다.</p>
+        <div class="card-scene">
+          <svg class="scene-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <p class="scene-text">두려움의 진짜 원인을 읽고, 구조 자체를 바꾸는 사람.</p>
+        </div>
+      </div>
+      <div class="card-expand-toggle" onclick="toggleCard('card2')">
+        <span>시나리오 전문</span>
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="card-story">
+        <div class="card-story-inner">왕궁 정원, 분수대 옆 벤치. 재상 박상민은 혼자 앉아 있다.
+
+오늘 조회에서 북부 영주와 남부 영주가 거의 싸움 직전까지 갔다. 신하들은 각자의 방으로 돌아갔다.
+
+박상민은 정원에 앉아 오늘 회의를 다시 천천히 복기한다.
+
+북부 영주가 진짜 화가 난 건 세금 문제가 아니었다. 세금 이야기를 할 때 그의 목소리가 아닌 손이 떨렸다. 그건 두려움이다. 남쪽과의 교역로가 막히면 자기 영지가 고립된다는 두려움.
+
+박상민은 일어나서 북부 영주의 숙소로 향한다. 먼저 전갈을 보낸다.
+"차 한 잔 하시겠습니까?"
+
+한 시간쯤 지났을까. 영주가 먼저 교역로 얘기를 꺼낸다.
+
+다음날 조회에서 북부 영주는 전날과 전혀 다른 사람처럼 말한다. 신하들은 영문을 모른다. 왕만 박상민을 한번 바라봤다가 시선을 거둔다.
+
+박상민은 아무 말도 하지 않는다. 오늘 해결했다고 생각하지 않는다. 북부 영주의 두려움은 아직 남아 있다. 그게 다시 터지기 전에 구조 자체를 바꿔야 한다.</div>
+      </div>
+    </article>
+
+    <!-- ── 이재은 · 왕실 기록관 ── -->
+    <article class="card" id="card3">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h5v16z"/></svg>
+        </div>
+        <h2 class="card-name">이재은</h2>
+        <p class="card-title-kr">왕실 기록관</p>
+        <p class="card-title-en">Royal Chronicler & Counselor</p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <div class="meta-label">롤모델</div>
+            <div class="meta-value">토마스 베케트 (초기)</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">핵심강점</div>
+            <div class="meta-value">전략 · 회고 · 지적사고</div>
+          </div>
+        </div>
+        <div class="card-quote">
+          <p>"1243년과 같은 구도입니다."</p>
+        </div>
+        <p class="card-summary">회의실에서 가장 늦게 발언하지만, 그 한마디가 흐름을 바꾼다.</p>
+        <div class="card-scene">
+          <svg class="scene-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <p class="scene-text">사실을 쌓아 만드는 그림 — 누구도 반박하기 어렵다.</p>
+        </div>
+      </div>
+      <div class="card-expand-toggle" onclick="toggleCard('card3')">
+        <span>시나리오 전문</span>
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="card-story">
+        <div class="card-story-inner">왕궁 지하, 양피지 냄새가 가득한 서고에서 이재은은 오늘도 촛불 하나를 켜놓고 앉아 있다.
+
+그의 책상 위에는 세 권의 책이 펼쳐져 있다. 하나는 200년 전 왕국이 이웃 나라와 맺은 조약문, 하나는 100년 전 기근 때 왕실이 내린 결정의 기록, 하나는 어제 왕이 서명한 새 포고령이다.
+
+"100년 전에도 똑같은 실수를 했구나."
+
+다음날 회의에서 왕이 새 세금 정책을 발표하려 한다. 신하들은 찬성 의견을 쏟아낸다. 이재은만 가만히 앉아 있다.
+
+"경은 의견이 없소?"
+"있습니다, 전하. 1243년에 선왕께서 같은 방식으로 세금을 올리셨습니다. 처음 3년은 재정이 늘었으나, 4년째에 북부 영주들이 연합했고, 5년째에 왕국은 내전을 겪었습니다."
+
+이재은은 목소리를 높이지 않는다. 감정도 없다. 그저 사실을 말할 뿐이다. 하지만 그 사실들이 쌓여서 만드는 그림은, 누구도 반박하기 어렵다.
+
+왕은 그날 포고령 서명을 보류했다.</div>
+      </div>
+    </article>
+
+    <!-- ── 임세환 · 왕의 마법사 ── -->
+    <article class="card" id="card4">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61z"/></svg>
+        </div>
+        <h2 class="card-name">임세환</h2>
+        <p class="card-title-kr">왕의 마법사</p>
+        <p class="card-title-en">Court Wizard & Strategist</p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <div class="meta-label">롤모델</div>
+            <div class="meta-value">멀린 (Merlin)</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">핵심강점</div>
+            <div class="meta-value">개별화 · 전략 · 발상</div>
+          </div>
+        </div>
+        <div class="card-quote">
+          <p>"북쪽 제3관문 수비대를 두 배로 늘리십시오. 이유는 나중에 설명하겠소."</p>
+        </div>
+        <p class="card-summary">문제가 생기기 전에, 적합한 사람을 적합한 자리에 조용히 갖다 놓는다.</p>
+        <div class="card-scene">
+          <svg class="scene-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <p class="scene-text">마을 사람들이 '마법'이라고 부르는 것의 정체는 — 사람을 아는 것이다.</p>
+        </div>
+      </div>
+      <div class="card-expand-toggle" onclick="toggleCard('card4')">
+        <span>시나리오 전문</span>
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="card-story">
+        <div class="card-story-inner">왕국의 수도 한복판, 높은 탑 꼭대기에 불빛이 꺼지지 않는 방이 있다. 마을 사람들은 그 방을 '세환의 방'이라고 부른다.
+
+오늘 밤도 그는 지도 위에 작은 돌멩이들을 올려놓고 있다. 북쪽 국경에서 온 정찰병의 보고, 시장에서 들려온 곡물 가격의 변화, 동쪽 공작이 갑자기 결혼을 서두른다는 소문. 보통 사람들에게는 아무 관계 없는 세 가지 사실이, 세환의 머릿속에서는 하나의 패턴으로 연결된다.
+
+"봄이 오기 전에 움직인다."
+
+그는 다음날 아침 왕을 찾아가지 않는다. 대신 기사단장 허하림을 찾아간다. 딱 한 마디만 한다.
+
+"북쪽 제3관문 수비대를 두 배로 늘리십시오. 이유는 나중에 설명하겠소."
+
+열흘 후, 북쪽 국경에서 소규모 침입 시도가 있었다. 미리 증원된 수비대가 조용히 막아냈다. 왕국 어디에서도 전쟁 소식은 들리지 않았다. 세환은 그날 저녁 또 탑으로 돌아가 다음 지도를 펼쳤다.
+
+그의 진짜 능력은 마법이 아니다. 어떤 사람에게 어떤 역할을 맡겨야 하는지 아는 것이다.</div>
+      </div>
+    </article>
+
+    <!-- ── 허하림 · 기사단장 ── -->
+    <article class="card" id="card5">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        </div>
+        <h2 class="card-name">허하림</h2>
+        <p class="card-title-kr">기사단장</p>
+        <p class="card-title-en">Field Marshal</p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <div class="meta-label">롤모델</div>
+            <div class="meta-value">리처드 1세 (사자심왕)</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">핵심강점</div>
+            <div class="meta-value">절친 · 분석 · 전략 · 행동</div>
+          </div>
+        </div>
+        <div class="card-quote">
+          <p>"요한, 잘 버텼다."</p>
+        </div>
+        <p class="card-summary">저 사람을 위해서라면 더 싸울 수 있다는 믿음. 그 믿음을 만드는 게 그의 진짜 일이다.</p>
+        <div class="card-scene">
+          <svg class="scene-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <p class="scene-text">300명의 이름을 다 아는 사람 — 전략이 아니라 믿음이 전투를 이긴다.</p>
+        </div>
+      </div>
+      <div class="card-expand-toggle" onclick="toggleCard('card5')">
+        <span>시나리오 전문</span>
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="card-story">
+        <div class="card-story-inner">전투 전날 밤, 진영 안을 혼자 돌아다니는 사람이 있다.
+
+갑옷도 벗고, 지휘관의 망토도 벗고, 평범한 울 코트 차림의 허하림이다. 그는 모닥불 하나하나에 멈춰 선다.
+
+"에릭, 왼쪽 어깨 다친 건 어떠냐."
+"빌헬름, 네 말이 오늘 좀 절었는데 확인했어?"
+"토마스, 내일 네가 맡은 구역 다시 한번 얘기해봐."
+
+그는 300명의 이름을 다 안다. 고향도 안다. 가족도 안다. 누가 첫 번째 돌격에 강하고 누가 지구전에 강한지를 안다.
+
+전투가 시작된다. 왼쪽 측면이 예상보다 빨리 무너진다. 참모들이 당황해서 허하림을 쳐다본다. 그는 이미 움직이고 있다. 두 번째 경로로 전환하는 명령이 세 마디로 떨어진다.
+
+전투가 끝난 후, 허하림은 부상자 천막으로 먼저 간다. 명령도 아니고, 연설도 아니다. 그냥 앉아서 이름을 부른다.
+
+"요한, 잘 버텼다."</div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="divider" style="padding-bottom:2rem">
+    <div class="divider-line"></div>
+    <div class="divider-diamond"></div>
+    <div class="divider-line"></div>
+  </div>
+  <p>THE FIVE PILLARS · 중세왕국</p>
+</footer>
+
+<script>
+function toggleCard(id){
+  document.getElementById(id).classList.toggle('expanded');
+}
+</script>
+</body>
+</html>
